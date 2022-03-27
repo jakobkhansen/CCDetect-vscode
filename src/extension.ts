@@ -1,25 +1,68 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import path = require("path");
+import * as vscode from "vscode";
+import {
+  LanguageClient,
+  LanguageClientOptions,
+  ServerOptions,
+} from "vscode-languageclient";
+
+const main: string = "App";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "ccdetect" is now active!');
+  var command = vscode.commands.registerCommand("ccdetect.startServer", () => {
+    // The code you place here will be executed every time your command is executed
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('ccdetect.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from CCDetect!');
-	});
+    // Display a message box to the user
+    vscode.window.showInformationMessage("Hello World!");
+  });
 
-	context.subscriptions.push(disposable);
+  context.subscriptions.push(command);
+
+  // Get the java home from the process environment.
+  const { JAVA_HOME } = process.env;
+
+  console.log(`Using java from JAVA_HOME: ${JAVA_HOME}`);
+  // If java home is available continue.
+  if (JAVA_HOME) {
+		vscode.window.showInformationMessage("hello");
+    // Java execution path.
+    let excecutable: string = path.join(JAVA_HOME, "bin", "java");
+
+    // path to the launcher.jar
+    let classPath = path.join(__dirname, "..", "launcher", "launcher.jar");
+    vscode.window.showInformationMessage(classPath);
+    const args: string[] = ["-cp", classPath];
+
+    // Set the server options
+    // -- java execution path
+    // -- argument to be pass when executing the java command
+    let serverOptions: ServerOptions = {
+      command: excecutable,
+      args: [...args, main],
+      options: {},
+    };
+
+    // Options to control the language client
+    let clientOptions: LanguageClientOptions = {
+      // Register the server for plain text documents
+      documentSelector: [{ scheme: "file", language: "hello" }],
+    };
+
+    // Create the language client and start the client.
+    let disposable = new LanguageClient(
+      "helloLS",
+      "HelloFalks Language Server",
+      serverOptions,
+      clientOptions
+    ).start();
+
+    // Disposables to remove on deactivation.
+    context.subscriptions.push(disposable);
+  }
 }
 
 // this method is called when your extension is deactivated
