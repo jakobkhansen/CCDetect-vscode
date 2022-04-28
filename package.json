@@ -22,13 +22,13 @@
     ],
     "languages": [
       {
-        "id": "cmp",
+        "id": "ccdetect",
         "aliases": [
-          "Compila",
-          "cmp"
+          "CCDetect",
+          "ccdetect"
         ],
         "extensions": [
-          ".cmp"
+          ".ccdetect"
         ]
       }
     ]

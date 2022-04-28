@@ -23,7 +23,8 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(command);
 
   // Get the java home from the process environment.
-  const { JAVA_HOME } = process.env;
+  // const { JAVA_HOME } = process.env;
+  const JAVA_HOME = "/usr/lib/jvm/java-11-openjdk"
 
   console.log(`Using java from JAVA_HOME: ${JAVA_HOME}`);
   // If java home is available continue.
@@ -35,27 +36,27 @@ export function activate(context: vscode.ExtensionContext) {
     // path to the launcher.jar
     let classPath = path.join(__dirname, "..", "launcher", "launcher.jar");
     vscode.window.showInformationMessage(classPath);
-    const args: string[] = ["-cp", classPath];
+    const args: string[] = ["-jar", classPath];
 
     // Set the server options
     // -- java execution path
     // -- argument to be pass when executing the java command
     let serverOptions: ServerOptions = {
       command: excecutable,
-      args: [...args, main],
+      args: [...args],
       options: {},
     };
 
     // Options to control the language client
     let clientOptions: LanguageClientOptions = {
       // Register the server for plain text documents
-      documentSelector: [{ scheme: "file", language: "hello" }],
+      documentSelector: [{ scheme: "file", language: "ccdetect" }],
     };
 
     // Create the language client and start the client.
     let disposable = new LanguageClient(
-      "helloLS",
-      "HelloFalks Language Server",
+      "CCDetect",
+      "CCDetect Language Server",
       serverOptions,
       clientOptions
     ).start();
