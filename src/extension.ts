@@ -24,12 +24,12 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Get the java home from the process environment.
   // const { JAVA_HOME } = process.env;
-  const JAVA_HOME = "/usr/lib/jvm/java-11-openjdk"
+  const JAVA_HOME = "/usr/lib/jvm/java-11-openjdk";
 
   console.log(`Using java from JAVA_HOME: ${JAVA_HOME}`);
   // If java home is available continue.
   if (JAVA_HOME) {
-		vscode.window.showInformationMessage("hello");
+    vscode.window.showInformationMessage("hello");
     // Java execution path.
     let excecutable: string = path.join(JAVA_HOME, "bin", "java");
 
@@ -50,7 +50,12 @@ export function activate(context: vscode.ExtensionContext) {
     // Options to control the language client
     let clientOptions: LanguageClientOptions = {
       // Register the server for plain text documents
-      documentSelector: [{ scheme: "file", language: "ccdetect" }],
+      documentSelector: [{ scheme: "file", language: "java" }],
+      initializationOptions: {
+        language: "java",
+        fragment_query: "(method_declaration) @method",
+        ignore_nodes: [],
+      },
     };
 
     // Create the language client and start the client.
@@ -67,4 +72,4 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
