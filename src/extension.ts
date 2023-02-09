@@ -36,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
     // path to the launcher.jar
     let classPath = path.join(__dirname, "..", "launcher", "launcher.jar");
     vscode.window.showInformationMessage(classPath);
-    const args: string[] = ["-jar", classPath];
+    const args: string[] = ["-Xmx8G", "-jar", classPath];
 
     // Set the server options
     // -- java execution path
@@ -54,7 +54,12 @@ export function activate(context: vscode.ExtensionContext) {
       initializationOptions: {
         language: "java",
         fragment_query: "(method_declaration) @method",
+        clone_token_threshold: 100,
         ignore_nodes: [],
+        extra_nodes: [],
+        dynamic_detection: true,
+        update_on_save: true,
+        // REMEMBER TO COMPILE
       },
     };
 
@@ -72,4 +77,4 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() {}
