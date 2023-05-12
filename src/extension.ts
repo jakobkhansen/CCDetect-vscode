@@ -15,9 +15,6 @@ const main: string = "App";
 export function activate(context: vscode.ExtensionContext) {
   var command = vscode.commands.registerCommand("ccdetect.startServer", () => {
     // The code you place here will be executed every time your command is executed
-
-    // Display a message box to the user
-    vscode.window.showInformationMessage("Hello World!");
   });
 
   context.subscriptions.push(command);
@@ -30,13 +27,11 @@ export function activate(context: vscode.ExtensionContext) {
   console.log(`Using java from JAVA_HOME: ${JAVA_HOME}`);
   // If java home is available continue.
   if (JAVA_HOME) {
-    vscode.window.showInformationMessage("hello");
     // Java execution path.
     let excecutable: string = path.join(JAVA_HOME, "bin", "java");
 
     // path to the launcher.jar
     let classPath = path.join(__dirname, "..", "launcher", "launcher.jar");
-    vscode.window.showInformationMessage(classPath);
     const args: string[] = ["-Xmx8G", "-jar", classPath];
 
     // Set the server options
@@ -54,7 +49,8 @@ export function activate(context: vscode.ExtensionContext) {
       documentSelector: [{ scheme: "file", language: "java" }],
       initializationOptions: {
         language: "java",
-        fragment_query: "(method_declaration) @method",
+        fragment_query:
+          "(method_declaration) @method (constructor_declaration) @constructor",
         clone_token_threshold: 100,
         ignore_nodes: [],
         extra_nodes: [],
@@ -65,12 +61,17 @@ export function activate(context: vscode.ExtensionContext) {
     };
 
     // Create the language client and start the client.
-    let disposable = new LanguageClient(
+    vscode.window.showInformationMessage("Starting CCDetect-LSP...");
+    let client = new LanguageClient(
       "CCDetect",
       "CCDetect Language Server",
       serverOptions,
       clientOptions
-    ).start();
+    );
+    let disposable = client.start();
+    client.onReady().then(() => {
+      vscode.window.showInformationMessage("Connected to CCDetect-LSP!");
+    });
 
     // Disposables to remove on deactivation.
     context.subscriptions.push(disposable);

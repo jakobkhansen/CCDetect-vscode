@@ -1,0 +1,3 @@
+[submodule "CCDetect-lsp"]
+	path = CCDetect-lsp
+	url = git@github.com:jakobkhansen/CCDetect-lsp.git
